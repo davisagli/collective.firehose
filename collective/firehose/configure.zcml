@@ -3,17 +3,17 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="collective.firehose">
 
-  <subscriber handler=".handle_start"
+  <subscriber handler=".zope2.handle_start"
               for="ZPublisher.interfaces.IPubStart" />
-  <subscriber handler=".handle_end"
+  <subscriber handler=".zope2.handle_end"
               for="ZPublisher.interfaces.IPubSuccess" />
-  <subscriber handler=".handle_end"
+  <subscriber handler=".zope2.handle_end"
               for="ZPublisher.interfaces.IPubFailure" />
 
   <browser:page
     for="*"
     name="firehose-stats"
-    class=".StatsView"
+    class=".zope2.StatsView"
     template="stats.pt"
     permission="cmf.ManagePortal"
     />
