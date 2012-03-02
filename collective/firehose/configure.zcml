@@ -1,0 +1,12 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="collective.firehose">
+
+  <subscriber handler=".handle_start"
+              for="ZPublisher.interfaces.IPubStart" />
+  <subscriber handler=".handle_end"
+              for="ZPublisher.interfaces.IPubSuccess" />
+  <subscriber handler=".handle_end"
+              for="ZPublisher.interfaces.IPubFailure" />
+
+</configure>
