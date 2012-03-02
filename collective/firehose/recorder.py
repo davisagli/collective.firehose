@@ -21,19 +21,18 @@ def record_stats():
 		    # track current requests
 		    if elapsed == '0':
 		    	pipe.sadd('serving', url)
-		    	continue
 		    else:
 		    	pipe.srem('serving', url)
 
-		    # track top hits per hour
-		    timeslot = time.time() // 3600
-		    pipe.zincrby('tophits.%s' % timeslot, url, 1)
+			    # track top hits per hour
+			    timeslot = time.time() // 3600
+			    pipe.zincrby('tophits.%s' % timeslot, url, 1)
 
-		    # track slowest hits per hour (in ms)
-		    slowkey = 'elapsed.%s' % timeslot
-		    old_elapsed = r.zscore(slowkey, url)
-		    if old_elapsed is None or float(elapsed) > float(old_elapsed):
-		    	pipe.zincrby(slowkey, url, elapsed)
+			    # track slowest hits per hour (in ms)
+			    slowkey = 'elapsed.%s' % timeslot
+			    old_elapsed = r.zscore(slowkey, url)
+			    if old_elapsed is None or float(elapsed) > float(old_elapsed):
+			    	pipe.zincrby(slowkey, url, elapsed)
 
 		    pipe.execute()
 	except (KeyboardInterrupt, SystemExit):
