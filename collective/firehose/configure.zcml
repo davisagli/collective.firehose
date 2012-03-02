@@ -10,12 +10,15 @@
   <subscriber handler=".zope2.handle_end"
               for="ZPublisher.interfaces.IPubFailure" />
 
+  <permission id="collective.firehose.ViewStats"
+              title="collective.firehose: View stats" />
+
   <browser:page
     for="*"
     name="firehose-stats"
     class=".zope2.StatsView"
     template="stats.pt"
-    permission="cmf.ManagePortal"
+    permission="collective.firehose.ViewStats"
     />
 
 </configure>
