@@ -5,42 +5,42 @@ import zmq
 
 def record_stats():
 
-	try:
-		context = zmq.Context()
-		sub = context.socket(zmq.SUB)
-		sub.connect('ipc:///tmp/collective.firehose.sock')
-		sub.setsockopt(zmq.SUBSCRIBE, '')
+    try:
+        context = zmq.Context()
+        sub = context.socket(zmq.SUB)
+        sub.connect('ipc:///tmp/collective.firehose.sock')
+        sub.setsockopt(zmq.SUBSCRIBE, '')
 
-		r = redis.StrictRedis(host='localhost', port=6379, db=0)
+        r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 
-		while True:
-		    url, elapsed = sub.recv().rsplit(' ', 1)
-		    pipe = r.pipeline()
+        while True:
+            url, elapsed = sub.recv().rsplit(' ', 1)
+            pipe = r.pipeline()
 
-		    # track current requests
-		    if elapsed == '0':
-		    	pipe.sadd('serving', url)
-		    else:
-		    	pipe.srem('serving', url)
+            # track current requests
+            if elapsed == '0':
+                pipe.sadd('serving', url)
+            else:
+                pipe.srem('serving', url)
 
-			    # track top hits per hour
-			    timeslot = time.time() // 3600
-			    pipe.zincrby('tophits.%s' % timeslot, url, 1)
+                # track top hits per hour
+                timeslot = time.time() // 3600
+                pipe.zincrby('tophits.%s' % timeslot, url, 1)
 
-			    # track slowest hits per hour (in ms)
-			    slowkey = 'elapsed.%s' % timeslot
-			    old_elapsed = r.zscore(slowkey, url)
-			    if old_elapsed is None or float(elapsed) > float(old_elapsed):
-			    	pipe.zincrby(slowkey, url, elapsed)
+                # track slowest hits per hour (in ms)
+                slowkey = 'elapsed.%s' % timeslot
+                old_elapsed = r.zscore(slowkey, url)
+                if old_elapsed is None or float(elapsed) > float(old_elapsed):
+                    pipe.zincrby(slowkey, url, elapsed)
 
-		    pipe.execute()
-	except (KeyboardInterrupt, SystemExit):
-		pass
-	except:
-		raise
-	finally:
-		sub.close()
+            pipe.execute()
+    except (KeyboardInterrupt, SystemExit):
+        pass
+    except:
+        raise
+    finally:
+        sub.close()
 
 # What data do I want to fetch?
 # 1. What URL is each client serving right now -- set of client:URL
