@@ -33,5 +33,7 @@ setup(name='collective.firehose',
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]
       target = plone
+      [console_scripts]
+      firehose-record = collective.firehose.recorder:record_stats
       """,
       )
