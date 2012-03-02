@@ -1,5 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="collective.firehose">
 
   <subscriber handler=".handle_start"
@@ -8,5 +9,13 @@
               for="ZPublisher.interfaces.IPubSuccess" />
   <subscriber handler=".handle_end"
               for="ZPublisher.interfaces.IPubFailure" />
+
+  <browser:page
+    for="*"
+    name="firehose-stats"
+    class=".StatsView"
+    template="stats.pt"
+    permission="cmf.ManagePortal"
+    />
 
 </configure>

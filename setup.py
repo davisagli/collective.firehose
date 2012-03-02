@@ -25,6 +25,7 @@ setup(name='collective.firehose',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'redis',
           'pyzmq',
           # -*- Extra requirements: -*-
       ],

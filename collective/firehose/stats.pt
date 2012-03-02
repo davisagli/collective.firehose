@@ -1,0 +1,29 @@
+<html>
+  <head>
+  	<title>Request Stats</title>
+  </head>
+  <body>
+  	
+  	<h2>Requests being served</h2>
+    <ol>
+     <li tal:repeat="url view/serving" tal:content="url" />
+    </ol>
+
+    <h2>Most popular pages this hour</h2>
+    <ol>
+     <li tal:repeat="item view/tophits">
+      <tal:block tal:content="python:item[0]" />
+      (<tal:block tal:content="python:item[1]" /> hits)
+     </li>
+    </ol>
+
+    <h2>Slowest requests this hour</h2>
+    <ol>
+     <li tal:repeat="item view/elapsed">
+      <tal:block tal:content="python:item[0]" />
+      (<tal:block tal:content="python:item[1]" />ms)
+     </li>
+    </ol>
+
+  </body>
+</html>
