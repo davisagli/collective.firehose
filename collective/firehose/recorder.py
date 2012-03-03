@@ -13,16 +13,16 @@ def record_stats():
 
         r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
-
         while True:
-            url, elapsed = sub.recv().rsplit(' ', 1)
+            instance_id, rest = sub.recv().split(' ', 1)
+            url, elapsed = rest.rsplit(' ', 1)
             pipe = r.pipeline()
 
             # track current requests
             if elapsed == '0':
-                pipe.sadd('serving', url)
+                pipe.sadd('serving', '%s:%s' % (instance_id, url))
             else:
-                pipe.srem('serving', url)
+                pipe.srem('serving', '%s:%s' % (instance_id, url))
 
                 # track top hits per hour
                 timeslot = time.time() // 3600

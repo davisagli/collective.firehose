@@ -1,7 +1,9 @@
 import time
 import threading
+import os
 import redis
 import zmq
+from App.config import getConfiguration
 from Products.Five import BrowserView
 
 STATS = threading.local()
@@ -11,16 +13,23 @@ zmq_pub = zmq_context.socket(zmq.PUB)
 zmq_pub.connect("ipc:///tmp/collective.firehose.sock")
 
 
+config = getConfiguration()
+try:
+    instance_id = config.product_config['firehose']['instance_id']
+except KeyError:
+    instance_id = os.getpid()
+
+
 def handle_start(event):
     request = event.request
     STATS.start = time.time()
     # XXX should include instance id
-    zmq_pub.send('%s %s' % (request.base + request.PATH_INFO, 0))
+    zmq_pub.send('%s %s %s' % (instance_id, request.base + request.PATH_INFO, 0))
 
 
 def handle_end(event):
     request = event.request
-    zmq_pub.send('%s %s' % (request.base + request.PATH_INFO, time.time() - STATS.start))
+    zmq_pub.send('%s %s %s' % (instance_id, request.base + request.PATH_INFO, time.time() - STATS.start))
 
 
 class StatsView(BrowserView):

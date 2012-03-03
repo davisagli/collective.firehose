@@ -1,4 +1,3 @@
-[ ] include instance identifier
 [ ] run as WSGI middleware
 [ ] make 0mq and redis endpoints configurable
 [ ] get rid of collective namespace

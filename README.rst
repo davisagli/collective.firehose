@@ -50,6 +50,16 @@ Finally, fire up your instance and go to http://localhost:8080/firehose-stats
 You should see the stats update every 5 seconds as you navigate around the
 site in another window.
 
+If you are collecting stats from multiple Zope instances, you can make it
+easier to identify which instance is serving a particular request by giving
+each instance a unique identifier. Add to your buildout::
+
+  [instance]
+  zope-conf-additional =
+    <product-config firehose>
+        instance_id my-instance-id
+    </product-config>
+
 Retrieving statistics
 ---------------------
 
