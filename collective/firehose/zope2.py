@@ -25,20 +25,20 @@ def handle_end(event):
 
 class StatsView(BrowserView):
 
-	def update(self):
-		r = redis.StrictRedis(host='localhost', port=6379, db=0)
-		pipe = r.pipeline()
+    def update(self):
+        r = redis.StrictRedis(host='localhost', port=6379, db=0)
+        pipe = r.pipeline()
 
-		timeslot = time.time() // 3600
-		pipe.smembers('serving')
-		pipe.zrevrange('tophits.%s' % timeslot, 0, 10, withscores=True, score_cast_func=int)
-		pipe.zrevrange('elapsed.%s' % timeslot, 0, 10, withscores=True)
+        timeslot = time.time() // 3600
+        pipe.smembers('serving')
+        pipe.zrevrange('tophits.%s' % timeslot, 0, 10, withscores=True, score_cast_func=int)
+        pipe.zrevrange('elapsed.%s' % timeslot, 0, 10, withscores=True)
 
-		self.serving, self.tophits, self.elapsed = pipe.execute()
+        self.serving, self.tophits, self.elapsed = pipe.execute()
 
-	def __call__(self):
-		self.update()
-		return self.index()
+    def __call__(self):
+        self.update()
+        return self.index()
 
 
 # What data do I want to fetch?
