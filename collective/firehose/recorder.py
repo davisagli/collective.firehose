@@ -8,7 +8,7 @@ def record_stats():
     try:
         context = zmq.Context()
         sub = context.socket(zmq.SUB)
-        sub.connect('ipc:///tmp/collective.firehose.sock')
+        sub.bind('ipc:///tmp/collective.firehose.sock')
         sub.setsockopt(zmq.SUBSCRIBE, '')
 
         r = redis.StrictRedis(host='localhost', port=6379, db=0)

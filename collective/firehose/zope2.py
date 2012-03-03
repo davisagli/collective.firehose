@@ -8,7 +8,7 @@ STATS = threading.local()
 
 zmq_context = zmq.Context()
 zmq_pub = zmq_context.socket(zmq.PUB)
-zmq_pub.bind("ipc:///tmp/collective.firehose.sock")
+zmq_pub.connect("ipc:///tmp/collective.firehose.sock")
 
 
 def handle_start(event):
